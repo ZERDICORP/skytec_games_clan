@@ -12,10 +12,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.After;
+import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.skytec.clan.context.ctx;
 import org.skytec.clan.controller.ClanController;
@@ -28,23 +28,22 @@ import org.skytec.clan.object.User;
 import org.skytec.clan.scheduler.manager.SchedulerManager;
 
 public class SkytecGamesClanApplicationTest {
-  private final int port = 8000;
-  private final ExecutorService executorService = Executors.newFixedThreadPool(17);
-  private final List<Pair<String, Long>> tests = new ArrayList<>();
-  private final Clan clan = new Clan("Big Brothers", 0);
-  private final User user = new User("Alex", 100000);
-  private final AtomicLong expectedClanGold = new AtomicLong();
-  private final AtomicLong expectedUserGold = new AtomicLong(user.wallet().val());
-  private final AtomicInteger count = new AtomicInteger();
-  private final SocketServer socketServer = ServerBuilder.begin()
+  private static final ExecutorService executorService = Executors.newFixedThreadPool(17);
+  private static final List<Pair<String, Long>> tests = new ArrayList<>();
+  private static final Clan clan = new Clan("Big Brothers", 0);
+  private static final User user = new User("Alex", 100000);
+  private static final AtomicLong expectedClanGold = new AtomicLong();
+  private static final AtomicLong expectedUserGold = new AtomicLong(user.wallet().val());
+  private static final AtomicInteger count = new AtomicInteger();
+  private static final SocketServer socketServer = ServerBuilder.begin()
     .withPort(8000)
     .withControllerRegistrar(ControllerRegistrar.begin()
       .register(new ClanController())
       .commit())
     .build();
 
-  @Before
-  public void setUp() throws InterruptedException {
+  @BeforeClass
+  public static void setUp() throws InterruptedException {
     // starting server
     executorService.execute(socketServer::start);
 
@@ -68,8 +67,8 @@ public class SkytecGamesClanApplicationTest {
     Thread.sleep(1000);
   }
 
-  @After
-  public void tearDown() {
+  @AfterClass
+  public static void tearDown() {
     socketServer.stop();
   }
 
@@ -103,6 +102,7 @@ public class SkytecGamesClanApplicationTest {
   }
 
   private void sendPacketWithTest(Pair<String, Long> test) {
+    int port = 8000;
     try (final Socket socket = new Socket("localhost", port);
          final OutputStream outputStream = socket.getOutputStream();
          final InputStream inputStream = socket.getInputStream()) {

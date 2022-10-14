@@ -19,10 +19,15 @@ import org.skytec.clan.storage.UserStorage;
  */
 
 public interface ctx {
+  // logger dependency
   LogQueue logQueue = new LogQueue();
+
+  // storages
   ClanStorage clanStorage = new ClanStorage();
   TaskStorage taskStorage = new TaskStorage();
   UserStorage userStorage = new UserStorage();
+
+  // services
   TransactionService transactionService = new TransactionService();
   LoggingService loggingService = new LoggingService();
   UserService userService = new UserService();
