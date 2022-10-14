@@ -1,5 +1,5 @@
 # skytec_games_clan
-#### Service for managing clan treasury.
+#### Web application for managing clan treasury.
 
 ## Technology stack :wrench:
 * ***Java*** (v11.0.15)
